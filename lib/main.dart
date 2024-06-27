@@ -160,21 +160,20 @@ class _TimerWidgetState extends State<TimerWidget> with SingleTickerProviderStat
   }
 
   void _updateAngle(Offset position, Size size) {
-    final center = Offset(size.width / 2, size.height / 2);
+   final center = Offset(size.width / 2, size.height / 2);
     final touchVector = position - center;
-    final touchAngle = touchVector.direction;
+    double touchAngle = touchVector.direction;
 
+    touchAngle = touchAngle + math.pi / 2;
+    if (touchAngle < 0) touchAngle += 2 * math.pi;
+
+    totalTimeInSeconds = TimerPainter(angle).getMinutes() * 60;
+    // int totalTimeInMinutes = totalTimeInSeconds ~/ 60;
+    // if (totalTimeInMinutes % 10 == 0) {
+    // }
     setState(() {
-      angle = touchAngle + math.pi / 2; // Adjust for starting point
-      if (angle < 0) angle += 2 * math.pi;
-      if (angle > 2 * math.pi) angle -= 2 * math.pi;
-
-      // Map the angle to 2 hours (i.e., 360 degrees for 2 hours)
-      angle = (angle % (2 * math.pi)) * 2;
-      if (angle > 2 * math.pi) angle = 2 * math.pi;
+      angle = touchAngle;
     });
-
-    totalTimeInSeconds = TimerPainter(angle: angle).getMinutes() * 60;
   }
 
   void _startTimer() {
